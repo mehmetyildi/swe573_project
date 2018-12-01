@@ -5,6 +5,6 @@ myvenv
 db.sqlite3
 /static
 .DS_Store
-config.json
+config - Kopya.json
 query-training.py
 query.ipynb
