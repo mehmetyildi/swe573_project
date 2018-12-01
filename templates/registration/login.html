@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="jumbotron">
+  <h1><strong>Welcome to Marketeer</strong></h1>
+  <br>
+  <h3>We give twitter support for your Guerilla Marketing needs. Just type in what you need and get started!</h3>
+
+</div>
+
+
+      <div id="login">
+        <h2><strong>Welcome.</strong> Please login.</h2>
+        <p>
+          <a class="twitter-before"><span class="fontawesome-twitter"></span></a>
+    			<a href="{% url 'social:begin' 'twitter' %}" class="twitter" type="button">Login Using Twitter</a>
+          </p>
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="jumbotron">
+  <h1>Welcome to Marketeer</h1>
+  <br>
+  <h3>We give twitter support for your Guerilla Marketing needs. Just type in what you need and get started!</h3>
+
+</div>
+
+<div class="card" >
+  <div class="card-body">
+    <h5 class="card-title">Market Info</h5>
+    <h6 class="card-subtitle mb-2 text-muted">Enter your market field and location</h6>
+    <form method="post" >
+      <div class="row">
+        {% csrf_token %}
+        <div class="col">
+          <label for="market">Market Field:</label>
+          <select name="market" class="form-control">
+            {% for market in markets %}
+              <option value="{{market.id}}">{{market.name}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col">
+          <label for="location">Location:</label>
+          <select name="location" class="form-control">
+            {% for location in locations %}
+              <option value="{{location.id}}">{{location.name}}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+
+      </div>
+      <div class="offset-md-11" style="margin-top:25px">
+        <button type="submit" class="btn btn-success" name="button">Save</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+
+
+
+
+
+{% endblock %}
+{% block script %}
+<script>
+
+  $(document).ready(function(){
+    $('#market_init').click(
+      function(){
+        $('#env_init').fadeIn(1000)
+      })
+  })
+</script>
+{% endblock %}

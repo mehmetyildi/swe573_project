@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block navbar %}
+{% include "_top_navbar.html" %}
+{% endblock %}
+{% block content %}
+<div class="col-md-6 offset-md-3">
+  {% for tweet in tweets %}
+  <blockquote class="twitter-tweet">
+    <a href="https://twitter.com/Interior/status/{{tweet.tweet_id}}?ref_src=twsrc%5Etfw">{{tweet.tweet_date}}</a>
+</blockquote>
+<form method="post">
+  {% csrf_token %}
+  <input type="hidden" name="tweet_id" value="{{tweet.tweet_id}}">
+  <input type="hidden" name="screen_name" value="{{tweet.screen_name}}">
+
+
+
+
+      <textarea name="tweet_text" rows="4" cols="53"></textarea>
+
+
+  <div class="offset-md-10" style="margin-top:25px">
+    <button type="submit" class="btn btn-success" name="button">Reply</button>
+  </div>
+
+  <hr>
+</form>
+
+{% endfor %}
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+</div>
+<table class="table table-striped">
+<thead class="table-dark">
+  <tr>
+    <th scope="col">Tweets</th>
+    <th scope="col">Date</th>
+    <th scope="col">Reply</th>
+  </tr>
+</thead>
+<tbody>
+  {% for tweet in tweets %}
+      <tr>
+        <td scope="row">{{ tweet.tweet_text }} </td>
+        <td style="white-space:nowrap;">{{ tweet.published_date }}</td>
+        <td>
+
+        </td>
+      </tr>
+
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+
+<div class="card" style="margin-top:30px;" >
+  <div class="card-body" >
+    <h5 class="card-title">Filters</h5>
+    <h6 class="card-subtitle mb-2 text-muted">Just enter how you want to filter the tweets</h6>
+
+      <div class="row">
+
+        <div class="col-md-5">
+          <label for="areas">Areas:</label>
+          <select class="form-control buttoning1">
+            {% for location in locations %}
+              <option value="{{location.id}}">{{location.name}}</option>
+            {% endfor %}
+          </select>
+
+
+        </div>
+        <div class="col-md-1">
+          <br>
+          <button type="button" class="btn btn-info button-maker1" style="margin-top:8px;" name="button"><span class="fa fa-plus"></span></button>
+        </div>
+        <div class="col-md-5">
+          <label for="keywords">Keywords:</label>
+          <select  class="form-control buttoning2">
+            {% for keyword in keywords %}
+              <option value="{{keyword.name}}">{{keyword.name}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-1">
+          <br>
+          <button type="button" class="btn btn-info button-maker2" style="margin-top:8px;" name="button"><span class="fa fa-plus"></span></button>
+        </div>
+      </div>
+
+
+    <div class="col-md-12 row">
+      <div class="col-md-6" >
+        <div class="areas-container row">
+
+        </div>
+
+      </div>
+      <div class="col-md-6" >
+        <div class="keywords-container row">
+
+        </div>
+
+      </div>
+
+    </div>
+    <form id="env_init"  method="post">
+      {% csrf_token %}
+      <div class="row">
+
+
+      <div style="display:none" class="col-md-3">
+      <select class="js-example-basic-multiple location" name="location" multiple="multiple">
+        {% for location in locations %}
+          <option value="{{location.id}}"
+          {% for area in selected_areas %}
+            {% ifequal area.id location.id %}
+              selected='selected'
+            {% endifequal %}
+          {% endfor %}
+          >{{location.name}}</option>
+        {% endfor %}
+      </select>
+      </div>
+      <div style="display:none" class="col-md-3">
+        <select class="js-example-basic-multiple2 form-control keyword" name="keywords" multiple="multiple">
+          {% for keyword in keywords %}
+            <option value="{{keyword.name}}"
+            {% for key in selected_keywords %}
+              {% ifequal key.id keyword.id %}
+                selected='selected'
+              {% endifequal %}
+            {% endfor %}
+            >{{keyword.name}}</option>
+            {% endfor %}
+        </select>
+      </div>
+      </div>
+      <div class="offset-md-10" style="margin-top:40px">
+        <button type="submit" class="btn btn-success" >Save</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+
+
+
+
+
+{% endblock %}
+{% block script %}
+<script>
+
+  $(document).ready(function(){
+    $('.js-example-basic-multiple').select2();
+    $('.js-example-basic-multiple2').select2();
+
+    $('.buttoning2').select2({
+  tags: true
+    });
+    $('#market_init').click(
+      function(){
+        $('#env_init').fadeIn(1000)
+      })
+  })
+
+</script>
+{% endblock %}
