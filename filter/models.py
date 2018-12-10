@@ -1,8 +1,9 @@
 from django.db import models
+from tweets import models as tweets
 
 # Create your models here.
 class UserMarketSettings(models.Model):
-    user=models.ForeignKey('auth.User',on_delete=models.CASCADE,)
+    user=models.ForeignKey('auth.User',on_delete=models.CASCADE,related_name='settings')
     market=models.ForeignKey('filter.Markets',on_delete=models.CASCADE,)
     location=models.ForeignKey('filter.Locations',on_delete=models.CASCADE,)
 
@@ -55,13 +56,18 @@ class UserAreas(models.Model):
         unique_together = ('area', 'user')
 
 class AreaHit(models.Model):
-    area = models.ForeignKey(Locations,related_name='areasettings',on_delete=models.DO_NOTHING)
+    area = models.ForeignKey(Locations,related_name='hit',on_delete=models.DO_NOTHING)
     setting = models.ForeignKey(UserMarketSettings,related_name='areas',on_delete=models.DO_NOTHING)
-    hit=models.IntegerField(blank=True, null=True)
+    hit=models.IntegerField(blank=True, null=True, default=0)
     on_delete=models.DO_NOTHING
 
     def __str__(self):
-        return self.user.username
+        return self.area.name
+
+    def gethit(area,location):
+        obj,created=AreaHit.objects.get_or_create(area=area,setting=location)
+        obj.hit=obj.hit+1
+        obj.save()
 
     class Meta:
         unique_together = ('area', 'setting')
@@ -69,11 +75,16 @@ class AreaHit(models.Model):
 class KeywordHit(models.Model):
     keyword = models.ForeignKey(Keywords,related_name='keywordsettings',on_delete=models.DO_NOTHING)
     setting = models.ForeignKey(UserMarketSettings,related_name='keywords',on_delete=models.DO_NOTHING)
-    hit=models.IntegerField(blank=True, null=True)
+    hit=models.IntegerField(blank=True, null=True, default=0)
     on_delete=models.DO_NOTHING
 
     def __str__(self):
-        return self.user.username
+        return self.keyword.name
+
+    def gethit(keyword,market):
+        obj,created=KeywordHit.objects.get_or_create(keyword=keyword,setting=market)
+        obj.hit=obj.hit+1
+        obj.save()
 
     class Meta:
         unique_together = ('keyword', 'setting')

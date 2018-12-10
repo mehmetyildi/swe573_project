@@ -2,20 +2,11 @@ from django.shortcuts import render
 from django.http import HttpResponse,JsonResponse
 from django.contrib.auth.decorators import login_required
 from filter.models import Locations, Markets, UserMarketSettings,Keywords,UserAreas,KeywordOwner
-from django.views.generic import (TemplateView,ListView,
-                                DetailView,CreateView,
-                                UpdateView,DeleteView)
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render,get_object_or_404,redirect
-# Create your views here.
-# class UserMarketSettingsCreate(TemplateView):
-#     template_name='filter/create.html'
-#     def get_context_data(self, **kwargs):
-#         context = super(UserMarketSettingsCreate, self).get_context_data(**kwargs)
-#         context['locations']=Locations.objects.order_by('id')
-#         context['markets']=Markets.objects.order_by('id')
-#         return context
+from .recommender import areaRecommendation, keywordRecommendation
+
 @login_required
 def create(request):
     all_markets=Markets.objects.order_by('id')
@@ -54,23 +45,23 @@ def update(request,pk):
 @login_required
 def filters(request):
     setting=UserMarketSettings.objects.filter(user=request.user.id).first()
+    recommended_areas=areaRecommendation(setting)
+    recommended_keywords=keywordRecommendation(setting)
     userareas=UserAreas.objects.all()
     locations=Locations.objects.order_by('id')
     keywords=Keywords.objects.order_by('id')
-    market_info={'locations':locations,'keywords':keywords}
+    market_info={'locations':locations,'keywords':keywords,'recommended_areas':recommended_areas,'recommended_keywords':recommended_keywords}
     user=request.user
     if request.method=='POST':
-
         for loc in request.POST.getlist('location'):
             location=Locations.objects.get(pk=loc)
             UserAreas.objects.create(user=request.user,area=location)
         for key in request.POST.getlist('keywords'):
             obj,created=Keywords.objects.get_or_create(name=key)
             KeywordOwner.objects.create(owner=request.user,keyword=obj)
-
-
         return redirect('tweets:tweet_list')
     return render(request, 'filter/filters.html',context=market_info)
+
 @login_required
 def update_filters(request,pk):
     setting=UserMarketSettings.objects.filter(user=request.user.id).first()
@@ -93,13 +84,6 @@ def update_filters(request,pk):
         return redirect('tweets:tweet_list')
     return render(request, 'filter/filters_update.html',context=market_info)
 
-@login_required
-def tweets(request):
-    user=request.user
-    areas=user.selected_areas.all()
-    keywords=user.selected_keywords.all()
-    return render(request, 'filter/tweets.html',context={'user':user, 'areas':areas, 'keywords':keywords})
-
 
 @login_required
 def home(request):
@@ -107,8 +91,3 @@ def home(request):
         return redirect('tweets:tweet_list')
     else:
         return redirect('filter:create')
-    user=request.user
-    areas=user.selected_areas.all()
-    keywords=user.selected_keywords.all()
-    return JsonResponse({'areas':areas,'keywords':keywords})
-    return render(request, 'filter/home.html')

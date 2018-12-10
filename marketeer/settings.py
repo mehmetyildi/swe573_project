@@ -31,7 +31,7 @@ SECRET_KEY = 'p8uk2pip9f6vdy5k3u!8r**nhue+4fab%y2t__ibs*rgr0s2h*'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['mehmetyildirim.pythonanywhere.com','localhost']
 
 
 # Application definition
@@ -46,7 +46,9 @@ INSTALLED_APPS = [
     'filter',
     'social_django',
     'tweets',
-    'social.apps.django_app.default'
+    'bootstrap_modal_forms',
+    'rest_framework',
+
 ]
 
 MIDDLEWARE = [
@@ -135,6 +137,14 @@ AUTHENTICATION_BACKENDS = (
     'social_core.backends.twitter.TwitterOAuth',
     'django.contrib.auth.backends.ModelBackend',
 )
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
