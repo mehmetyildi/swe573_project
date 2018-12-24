@@ -1,0 +1,2 @@
+#Marketeer
+This is a school project of Bogazici University SWE 573 course. In this project I proposed a guerilla marketting support for local marketplaces, which aims to find the recent tweets of the people in the area of the active users(market owner) marketplace that matches his/her keywords. Than the user can reply the tweets and leave personel advertises.

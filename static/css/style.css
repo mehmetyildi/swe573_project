@@ -77,6 +77,13 @@ strong {
 	width: 250px;
 }
 
+.alert-dismissible{
+  right:300px;
+  bottom:50px;
+  position:absolute;
+  border-radius: 0px 3px 3px 0px;
+}
+
 .messages{
   right:50px;
   bottom:50px;

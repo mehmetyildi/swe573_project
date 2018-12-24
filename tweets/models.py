@@ -27,9 +27,16 @@ class Tweet(models.Model):
         else:
             return False
 
+    def isNew(self):
+        if(Tweet.objects.filter(tweet_id=self.tweet_id).count()>0):
+            return False
+        else:
+            return True
+
 class Reply(models.Model):
     tweet=models.ForeignKey(Tweet,on_delete=models.CASCADE, null=True, blank=True,related_name='threaded_reply')
     reply_id=models.CharField(max_length=250, null=True, blank=True)
+    user=models.ForeignKey('auth.User',on_delete=models.CASCADE, null=True, blank=True)
 
 class Reported(models.Model):
     tweet=models.ForeignKey(Tweet,on_delete=models.CASCADE, null=True, blank=True,related_name='reported_tweet')

@@ -1,7 +1,20 @@
-{% extends 'base.html' %}
+{% extends 'base_tweet.html' %}
 {% block navbar %}
 {% include "_top_navbar.html" %}
 {% endblock %}
+{%block user_settings%}
+
+<h3><strong>Your Market Settings</strong></h3>
+<h4>Market:{{settings.market}}</h4>
+<h4>Location:{{settings.location}}</h4>
+<a href="{% url 'filter:update' pk=user.pk %}" type="button" class="btn btn-primary">Change</a>
+<hr>
+<h3><strong>Your Query Settings</strong></h3>
+<h4><strong>Areas:</strong></h4>{%for area in user.selected_areas.all%}<p>{{area.name}}</p>{%endfor%}
+<h4><strong>Keywords:</strong></h4>{%for keyword in user.selected_keywords.all%}<p>{{keyword.name}}</p>{%endfor%}
+<a href="{% url 'filter:update_filters' pk=user.pk %}" type="button" class="btn btn-primary">Change</a>
+{%endblock%}
+
 {% block content %}
 {% if messages %}
 
@@ -12,11 +25,14 @@
     {% endfor %}
 
 {% endif %}
-<div class="col-md-6 offset-md-3">
+
+
+<div class="col-md-8 offset-md-4">
   {% for tweet in tweets %}
 
 {%if tweet.hasReply %}
   {%for reply in tweet.threaded_reply.all%}
+  {% ifequal reply.user user %}
   <blockquote class="twitter-tweet">
     <a href="https://twitter.com/Interior/status/{{reply.reply_id}}?ref_src=twsrc%5Etfw"></a>
   </blockquote>
@@ -30,6 +46,8 @@
 
   </form>
   <hr>
+
+  {%endifequal%}
   {%endfor%}
 
 {%else%}
@@ -65,7 +83,6 @@
   </div>
 </div>
 
-<!-- Create book button -->
 
 <hr>
 {%endif %}
@@ -76,7 +93,7 @@
 </div>
 
 {% if tweets.has_other_pages %}
-<div class="col-md-3 offset-md-3">
+<div class="col-md-3 offset-md-4">
   <nav aria-label="Page navigation example">
   <ul class="pagination">
     {% if tweets.has_previous %}

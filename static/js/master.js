@@ -89,6 +89,7 @@ $(document).ready(function(){
     })
 
   })
+  $('.alert-dismissible').fadeOut(10000)
   $('.messages').fadeOut(5000)
   $(".report-tweet").each(function () {
       $(this).modalForm({formURL: $(this).data('id')});

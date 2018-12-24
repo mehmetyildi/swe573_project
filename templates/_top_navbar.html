@@ -13,9 +13,7 @@
           {{user.first_name}}{{" "}}{{user.last_name}}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="{% url 'filter:update' pk=user.pk %}">Change Settings</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+          <a class="dropdown-item" href="{% url 'logout' %}?next=/">Logout</a>
 
 
         </div>

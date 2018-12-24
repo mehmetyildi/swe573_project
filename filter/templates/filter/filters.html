@@ -1,7 +1,5 @@
 {% extends "base.html" %}
-{% block navbar %}
-{% include "_top_navbar.html" %}
-{% endblock %}
+
 {% block content %}
 
 
@@ -9,7 +7,7 @@
 <div class="card" style="margin-top:30px;" >
   <div class="card-body" >
     <h5 class="card-title">Filters</h5>
-    <h6 class="card-subtitle mb-2 text-muted">Here are some area and keyword recommendations for your market and location settings. You can add from the lists or delete them if you want by just clicking on them.</h6>
+    <h6 class="card-subtitle mb-2 text-muted">Here are some area and keyword recommendations for your market and location settings. You can add from the lists. Or delete them, if you want, by just clicking on them.</h6>
 
       <div class="row">
 
@@ -56,13 +54,15 @@
       </div>
 
     </div>
+    <br>
+    <hr>
     <form id="env_init" method="post">
       {% csrf_token %}
       <div class="row">
 
 
       <div style="display:none" class="col-md-3">
-      <select class="js-example-basic-multiple location" name="location" multiple="multiple">
+      <select class="js-example-basic-multiple location" name="areas" multiple="multiple">
         {% for location in locations %}
         <option value="{{location.id}}"
         {% for area in recommended_areas %}
@@ -88,9 +88,16 @@
         </select>
       </div>
       </div>
-      <div class="offset-md-10" style="margin-top:40px">
-        <button type="submit" class="btn btn-success" >Save</button>
+      <div class="offset-md-5" style="margin-top:40px">
+        <button type="submit" class="btn btn-default" >Save</button>
       </div>
+      <div class="alert alert-warning alert-dismissible fade show col-md-5" role="alert">
+        <strong>Hi There</strong> There is some useful recommendations for your convenience. You can just CLICK on them to dismiss
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
 
     </form>
   </div>

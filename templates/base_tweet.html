@@ -17,12 +17,19 @@
   <body>
     {% block navbar %}
     {% endblock %}
-    <div class="container">
+    <div class="container row">
+      <div class="col-md-3 col">
+        {% block user_settings%}
+        {%endblock%}
+      </div>
+      <div class="col-md-9 col">
 
-      {% block content %}
+        {% block content %}
 
-      {% endblock %}
+        {% endblock %}
+      </div>
     </div>
+
 
 
   </body>

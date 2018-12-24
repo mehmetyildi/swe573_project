@@ -87,7 +87,7 @@ class UpdatePageTests(TestCase):
     def test_view_url_by_name(self):
         market=Markets(name='Müzik')
         market.save()
-        location=Locations(name='Kadıköy')
+        location=Locations(name='Kadıköy') 
         location.save()
         user = User.objects.create(username='testuser', password='12345', is_active=True, is_staff=True, is_superuser=True)
         setting=UserMarketSettings(user=user,market=market,location=location)
