@@ -23,7 +23,7 @@ auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 api = tweepy.API(auth)
 yesterday = date.today() - timedelta(1)
 today = date.today()
-max_tweets=2
+max_tweets=50
 i=1
 currentTime = str(datetime.datetime.now().date())
 tweets=[]
@@ -32,8 +32,13 @@ filtered_tweets=[]
 try_number=0
 final_tweets=[]
 
-def resident(user,town):#returns true if a user follows the districts mayor's office twitter account. We use this to filter tweets that have the desired keywords.
-    return api.show_friendship(source_screen_name=user,target_screen_name=town)[0].following
+def resident(username,town,user):#returns true if a user follows the districts mayor's office twitter account. We use this to filter tweets that have the desired keywords.
+    instance = UserSocialAuth.objects.filter(user=user).get()
+    oauth_access_token=(instance.access_token).get('oauth_token')
+    oauth_access_secret=(instance.access_token).get('oauth_token_secret')
+    auth.set_access_token(oauth_access_token, oauth_access_secret)
+    api = tweepy.API(auth)
+    return api.show_friendship(source_screen_name=username,target_screen_name=town)[0].following
 
 def fetch(keyword):
     filtered_tweets[:]=[]
@@ -41,11 +46,12 @@ def fetch(keyword):
     query=keyword+" -filter:retweets"
     searched_tweets = [status for status in tweepy.Cursor(api.search, tweet_mode="extended", q=query,result_type="recent",include_entities=True,since = yesterday,lang='tr').items(max_tweets)]
     for tweets in searched_tweets:
+        print(tweets.full_text)
         filtered_tweets.append(tweets)
     print(len(filtered_tweets))
     return filtered_tweets
 
-def filter(area,tweets):
+def filter(area,tweets,user):
     final_tweets[:]=[]
     d=datetime.datetime.now()
     stamp=d.strftime("%d%m%Y%H%M%S")
@@ -55,7 +61,7 @@ def filter(area,tweets):
         print("Qurying for tweet number "+str(tweet_index))
         username=tweet.user.screen_name
         try:
-            if(resident(username,area)):
+            if(resident(username,area,user)):
                 final_tweets.append(tweet)
         except tweepy.error.TweepError:
             print("Waiting 15 minutes due to Twitter limitations")
@@ -72,7 +78,7 @@ def show_tweets(keywords,areas,user):#filters the tweets first through keywords 
     for keyword in keywords:#looks for tweets one keyword at a time and keep the keyword with the tweet. We need this to keep hit values.
         tweets=fetch(keyword)
         for area in areas:#than looks for tweets that has the keyword for areas one at a time for similar reason as the keywords.
-            final=filter(area,tweets)
+            final=filter(area,tweets,user)
             print("Final number tweets of the keyword: "+keyword)
             print(len(final))
             for tweet in final:#write the filtered tweets to database.
